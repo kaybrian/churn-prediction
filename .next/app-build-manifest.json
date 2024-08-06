@@ -16,29 +16,22 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/retrain/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/retrain/page.js"
-    ],
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
-    ],
-    "/about/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/about/page.js"
-    ],
     "/predict/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+      "static/css/app/predict/page.css",
       "static/chunks/app/predict/page.js"
+    ],
+    "/retrain/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/retrain/page.css",
+      "static/chunks/app/retrain/page.js"
     ],
     "/rebuild-model/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+      "static/css/app/rebuild-model/page.css",
       "static/chunks/app/rebuild-model/page.js"
     ]
   }

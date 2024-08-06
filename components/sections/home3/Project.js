@@ -1,8 +1,61 @@
 'use client'
 import Link from "next/link"
+import { useState } from "react"
+import { api_url } from "@/api_url"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 export default function Project() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [data, setData] = useState(null);
+    const [preprocessSuccess, setPreprocessSuccess] = useState(false);
+
+    const PreprocessData = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`${api_url}/preprocess/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    test_size: 0,
+                    random_state: 0
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            setData(result.message);
+            setPreprocessSuccess(true);  // Set success to true
+            toast.success(result.message);
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             {/*Start Project One*/}
             <section className="project-one">
                 <div className="container">
@@ -118,8 +171,8 @@ export default function Project() {
                                         </ul>
                                     </div>
                                     <div className="meta-info">
-                                        <p><Link href="#">Training and Testing Sets: We save the processed data into separate files for training and testing.<br/><br/>
-                                        Scaler: We save the tool that standardizes the data, so we can apply the same scaling to new data in the future.</Link></p>
+                                        <p><Link href="#">Training and Testing Sets: We save the processed data into separate files for training and testing.<br /><br />
+                                            Scaler: We save the tool that standardizes the data, so we can apply the same scaling to new data in the future.</Link></p>
                                     </div>
 
                                 </div>
@@ -129,10 +182,35 @@ export default function Project() {
                     {/*End Single Project One*/}
 
                     <div className="project-one__btn-box">
-                        <Link className="thm-btn" href="#">
-                            <span className="txt">PreProcess the data Again</span>
-                            <i className="icon-next"></i>
-                        </Link>
+                        {/* {
+                            loading ? <p>Loading...</p> : (
+                                <button className="thm-btn" onClick={PreProcess}>
+                                    <span className="txt">PreProcess Data</span>
+                                    <i className="icon-next"></i>
+                                </button>)
+                        } */}
+
+                        {
+                            loading ? (
+                                <button
+                                    disabled={true}
+                                    className="thm-btn"
+
+                                >
+                                    <span className="txt">Loading ...</span>
+                                    <i className="icon-next"></i>
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => PreprocessData()}
+                                    className="thm-btn"
+                                >
+                                    <span className="txt">PreProcess Data</span>
+                                    <i className="icon-next"></i>
+                                </button>
+                            )
+                        }
+
                     </div>
 
                 </div>

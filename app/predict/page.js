@@ -2,6 +2,9 @@
 import Layout from "@/components/layout/Layout"
 import Link from "next/link"
 import { useState } from 'react';
+import { api_url } from "@/api_url";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
 
@@ -28,35 +31,96 @@ export default function Home() {
         });
     };
 
-        // Handle form submission
-        const handleSubmit = async (e) => {
-            e.preventDefault();
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-            // log the data to see
-            // console.log(formData);
+        // log the data to see
+        // console.log(formData);
 
-            // Process and send form data
-            // try {
-            //     const response = await fetch('/api/predict', { // Replace with your API endpoint
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify(formData),
-            //     });
+        // Convert formData to a list
+        const formDataList = Object.values(formData);
 
-            //     const result = await response.json();
+        // send the data to the url
+        const response = await fetch(`${api_url}/predict/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "data": [
+                    formDataList
+                ]
+            }
+            )
+        })
 
-            //     // Handle response (e.g., show prediction result to the user)
-            //     console.log(result);
-            // } catch (error) {
-            //     console.error('Error:', error);
-            // }
-        };
+        // Get the response
+        const data = await response.json();
+
+
+
+        // Check if the response is ok
+        if (!response.ok) {
+            toast.error("An error occurred");
+
+            // clear the form
+            setFormData({
+                creditScore: '',
+                gender: '',
+                age: '',
+                tenure: '',
+                balance: '',
+                numberOfProducts: '',
+                hasCreditCard: '',
+                isActiveMember: '',
+                estimatedSalary: ''
+            })
+        }
+
+        // Check if the response is ok
+        if (response.ok) {
+            // Redirect to the result page
+            // Log the data to see
+            if (data.predictions[0] === 1) {
+                toast.success("Based on the data you provided, the customer is likely to churn, i.e., leave the bank");
+            } else {
+                toast.success("Based on the data you provided, the customer is likely to stay with the bank");
+            }
+
+            // clear the form
+            setFormData({
+                creditScore: '',
+                gender: '',
+                age: '',
+                tenure: '',
+                balance: '',
+                numberOfProducts: '',
+                hasCreditCard: '',
+                isActiveMember: '',
+                estimatedSalary: ''
+            })
+        }
+
+
+    };
 
     return (
         <>
             <Layout headerStyle={4} footerStyle={1} breadcrumbTitle="Predict ">
+                {/* create a tostify */}
+                <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                />
                 {/*Start Contact Page*/}
                 <section className="contact-page">
                     <div className="contact-page__top">
